@@ -20,7 +20,6 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
-		alert('app initialized');
     },
     // Bind Event Listeners
     //
@@ -35,8 +34,7 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-		alert('device ready');
-        var parentElement = document.getElementById('deviceready');
+		var parentElement = document.getElementById('deviceready');
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
 
@@ -45,17 +43,8 @@ var app = {
 
         app.receivedEvent('deviceready');
 		
-		//$('#home').on('pagecreate',function(event){
-  	//	setTimeout(function() { $.mobile.changePage("#question", { transition: "slide" }); }, 1000);
-	//});
-		try
-		{
-			$.mobile.changePage("#question", { transition: "slide" });
-		}
-		catch(err)
-		{
-			alert(err.message);
-		}
+		$.mobile.changePage("#question", { transition: "slide" });
+
 		if (window.localStorage['first-run'] == null)
 		{
 			window.localStorage['first-run'] = false;

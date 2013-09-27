@@ -47,10 +47,14 @@
 </div>
 <div data-role="page" id="question">
   <div data-role="header"> 
-  	<a data-role="button" href="#home" data-icon="arrow-l" data-iconpos="left" data-transition="slide"
-        data-direction="reverse" class="ui-btn-left"> Prev </a> <a data-role="button" href="#home" data-icon="arrow-r" 
-        data-iconpos="right" data-transition="slide" class="ui-btn-right"> Next 
-    </a>
+  		<a id="btnQuestionPrev" data-role="button" href="#question" data-icon="arrow-l" 
+        data-iconpos="left" data-transition="slide" data-direction="reverse" class="ui-btn-left"> 
+        	Prev 
+    	</a> 
+        <a id="btnQuestionNext" data-role="button" href="#question" data-icon="arrow-r" 
+        data-iconpos="right" data-transition="slide" class="ui-btn-right"> 
+        	Next 
+    	</a>
     <h3> Question </h3>
   </div>
   <div data-role="content"> 
@@ -69,11 +73,15 @@
 </div>   
 <div data-role="page" id="answer">
     <div data-role="header">
-        <a data-role="button" href="#home" data-icon="arrow-r" data-iconpos="right"
-        class="ui-btn-right">
-            Next
+        <a id="btnAnswerPrev" data-role="button" href="#question" data-icon="arrow-l" data-iconpos="left" 
+        data-transition="slide" data-direction="reverse" class="ui-btn-left"> 
+        	Prev 
+        </a> 
+        <a id="btnAnswerNext" data-role="button" href="#question" 
+        data-icon="arrow-r" data-iconpos="right" data-transition="slide" class="ui-btn-right"> 
+        	Next 
         </a>
-        <a data-role="button" href="#home" data-icon="arrow-l" data-iconpos="left"
+        <a id="btnAnswerPrev" data-role="button" href="#home" data-icon="arrow-l" data-iconpos="left"
         class="ui-btn-left">
             Prev
         </a>
