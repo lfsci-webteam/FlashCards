@@ -34,19 +34,45 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
+         var parentElement = document.getElementById('deviceready');
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
 
-        console.log('Received Event: ' + id);
+        app.receivedEvent('deviceready');
 		
-		$.mobile.changePage("#question", { transition: "slide" });
+		//$('#home').on('pagecreate',function(event){
+  	//	setTimeout(function() { $.mobile.changePage("#question", { transition: "slide" }); }, 1000);
+	//});
+		try
+		{
+			$.mobile.changePage("#question", { transition: "slide" });
+		}
+		catch(err)
+		{
+			alert(err.message);
+		}
+		if (window.localStorage['first-run'] == null)
+		{
+			window.localStorage['first-run'] = false;
+			var questions = [];
+			var answers = [];
+			questions.push('What is the answer to life, the universe, and everything?');
+			answers.push(42);
+			
+			window.localStorage['questions'] = JSON.stringify(questions);
+			window.localStorage['answers'] = JSON.stringify(answers);		
+		}
+		
+		var questions = JSON.parse(window.localStorage['questions']);
+		var answers = JSON.parse(window.localStorage['answers']);
+    },
+    // Update DOM on a Received Event
+    receivedEvent: function(id) {
+       
+		console.log('Received Event: ' + id);
+		
     }
 };
