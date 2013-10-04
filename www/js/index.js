@@ -43,27 +43,177 @@ var app = {
 
         app.receivedEvent('deviceready');
 		
-		$.mobile.changePage("#question", { transition: "slide" });
+    	//***********************************************************
+    	// If this is the first time running the app add a default 
+		// flash card. Otherwise load the cards from local storage
 
-		if (window.localStorage['first-run'] == null)
+    	//window.localStorage['first-run'] = '';
+        if (window.localStorage['first-run'] == null || window.localStorage['first-run'] == '')
 		{
 			window.localStorage['first-run'] = false;
-			var questions = [];
-			var answers = [];
-			questions.push('What is the answer to life, the universe, and everything?');
-			answers.push(42);
+			var cards = [];
+			var defaultQuestion =
+			{
+				'question': 'What is the answer to life, the universe, and everything?',
+				'answer': 42
+			};
+			cards.push(defaultQuestion);
 			
-			window.localStorage['questions'] = JSON.stringify(questions);
-			window.localStorage['answers'] = JSON.stringify(answers);		
+			window.localStorage['flashcards'] = JSON.stringify(cards);
 		}
 		
-		var questions = JSON.parse(window.localStorage['questions']);
-		var answers = JSON.parse(window.localStorage['answers']);
+		window.addEventListener('orientationchange', doOnOrientationChange);
+		$('#home').on('pagebeforeshow', refreshCardList);
+
+    	//***********************************************************
+    	// New Card Dialog
+		$('#btnNewCard').click(function() {
+			$('#txtQuestion').val('');
+			$('#txtAnswer').val('');
+			$.mobile.changePage("#newCard", { transition: "slideup" });
+		});
+
+		$('#btnSaveNewCard').click(function () {
+			var cards = JSON.parse(localStorage['flashcards']);
+			cards.push(
+			{
+				'question' :  $('#txtQuestion').val(),
+				'answer' : $('#txtAnswer').val(),
+			});
+
+			// save the new question to local storage
+			window.localStorage['flashcards'] = JSON.stringify(cards);
+
+			// return to the question list. The list will be refreshed by the home page's
+			// pagebeforeshow event.
+			$.mobile.changePage("#home", { transition: "slideup", direction: "reverse" });
+		});
+
+    	//***********************************************************
+    	// Question Page
+		$('#question').on('pagebeforeshow', function (sender, args) {
+			var cards = JSON.parse(localStorage['flashcards']);
+			var id = sessionStorage['questionID'];
+			$('#questionText').html(cards[id]['question']);
+
+			setNavigationButtonVisibility(id, cards.length);
+		});
+
+    	//@bug: slide transition to same page makes page disappear
+		$('#question').on('pageshow', function (sender, args) {
+			$(this).addClass('ui-page-active');
+		});
+
+    	// since we're transitioning to the same page we need to manually call the 
+		// changepage function for the next and prev buttons on the question page
+		$('#btnQuestionPrev').click(function () {
+			decrementQuestionID();
+			var id = sessionStorage['questionID'];
+			$.mobile.changePage("#question", { transition: "slide", reverse: true, allowSamePageTransition : true });
+		});
+
+		$('#btnQuestionNext').click(function () {
+			incrementQuestionID();
+			var id = sessionStorage['questionID'];
+			$.mobile.changePage("#question", { transition: "slide", allowSamePageTransition: true });
+		});
+
+		//***********************************************************
+		// Answer Page
+		$('#answer').on('pagebeforeshow', function (sender, args) {
+			var cards = JSON.parse(localStorage['flashcards']);
+			var id = sessionStorage['questionID'];
+			$('#answerText').html(cards[id]['answer']);
+
+			setNavigationButtonVisibility(id, cards.length);
+		});
+
+		$('#btnAnswerPrev').click(function () {
+			decrementQuestionID();
+		});
+
+		$('#btnAnswerNext').click(function () {
+			incrementQuestionID();
+		});
+
+		// Once we've finished loading switch to the home screen
+		$.mobile.changePage("#home", { transition: "fade" });
     },
-    // Update DOM on a Received Event
+
     receivedEvent: function(id) {
-       
 		console.log('Received Event: ' + id);
-		
     }
 };
+
+function decrementQuestionID() {
+	var id = parseInt(sessionStorage['questionID']);
+	id -= 1;
+	sessionStorage['questionID'] = id;
+}
+
+function incrementQuestionID() {
+	var id = parseInt(sessionStorage['questionID']);
+	id += 1;
+	sessionStorage['questionID'] = id;
+}
+
+function doOnOrientationChange() {
+	//refreshCardList();
+}
+
+function refreshCardList() {
+	var cards = JSON.parse(localStorage['flashcards']);
+	var cardList = $('#cardList');
+	cardList.empty();
+
+	for (var i = 0; i < cards.length; i++) {
+		var card = cards[i];
+		var text = cards[i]['question'];
+
+		var deleteButton = '';
+		if (true)
+		//if (sessionStorage['editMode'] == true)
+		{
+			deleteButton = '<a data-iconpos="notext" onclick="deleteQuestion(' + i + ')" data-rel="external">Delete</a>';
+		}
+		var listItem = '<li><a href="#question" onclick="setQuestionID(' + i + ')" data-transition="slide">' + text + '</a>' + deleteButton + '</li>';
+		cardList.append(listItem);
+	}
+	cardList.listview("refresh");
+}
+
+function deleteQuestion(id) {
+	var cards = JSON.parse(localStorage['flashcards']);
+	cards.splice(id, 1);
+	window.localStorage['flashcards'] = JSON.stringify(cards);
+	refreshCardList();
+}
+function setQuestionID(id) {
+	sessionStorage['questionID'] = id;
+}
+
+function setNavigationButtonVisibility(id, numCards) {
+
+	// Hide prev button if we're on the first question
+	if (id == 0)
+		$('#btnQuestionPrev, #btnAnswerPrev').hide();
+	else
+		$('#btnQuestionPrev, #btnAnswerPrev').show();
+
+	// Hide next button if we're on the last question
+	if (id == numCards - 1)
+		$('#btnQuestionNext, #btnAnswerNext').hide();
+	else
+		$('#btnQuestionNext, #btnAnswerNext').show();
+}
+
+//setTimeout(function () {
+//	$.mobile.changePage("#home", { transition: "fade" });
+
+//	$('#question').on('pagebeforechange', function (event, data) {
+//		alert(JSON.stringify(data, null, 4));
+//		$('#questionText').html('Hey');
+//	});
+
+//}, 2000);
+
