@@ -33,107 +33,114 @@ var app = {
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-		var parentElement = document.getElementById('deviceready');
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+    onDeviceReady: function () {
+    	try
+    	{
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+    		var parentElement = document.getElementById('deviceready');
+    		var listeningElement = parentElement.querySelector('.listening');
+    		var receivedElement = parentElement.querySelector('.received');
 
-        app.receivedEvent('deviceready');
+    		listeningElement.setAttribute('style', 'display:none;');
+    		receivedElement.setAttribute('style', 'display:block;');
+
+    		app.receivedEvent('deviceready');
 		
-    	//***********************************************************
-    	// If this is the first time running the app add a default 
-		// flash card. Otherwise load the cards from local storage
+    		//***********************************************************
+    		// If this is the first time running the app add a default 
+    		// flash card. Otherwise load the cards from local storage
 
-        if (window.localStorage['first-run'] == null)
-		{
-			window.localStorage['first-run'] = false;
-			var cards = [];
-			var defaultQuestion =
-			{
-				'question': 'What is the answer to life, the universe, and everything?',
-				'answer': 42
-			};
-			cards.push(defaultQuestion);
+    		if (window.localStorage['first-run'] == null)
+    		{
+    			window.localStorage['first-run'] = false;
+    			var cards = [];
+    			var defaultQuestion =
+				{
+					'question': 'What is the answer to life, the universe, and everything?',
+					'answer': 42
+				};
+    			cards.push(defaultQuestion);
 			
-			window.localStorage['flashcards'] = JSON.stringify(cards);
-		}
+    			window.localStorage['flashcards'] = JSON.stringify(cards);
+    		}
 		
-		window.addEventListener('orientationchange', doOnOrientationChange);
-		$('#home').on('pagebeforeshow', refreshCardList);
+    		window.addEventListener('orientationchange', doOnOrientationChange);
+    		$('#home').on('pagebeforeshow', refreshCardList);
 
-    	//***********************************************************
-    	// New Card Dialog
-		$('#btnNewCard').click(function() {
-			$('#txtQuestion').val('');
-			$('#txtAnswer').val('');
-			$.mobile.changePage("#newCard", { transition: "slideup" });
-		});
+    		//***********************************************************
+    		// New Card Dialog
+    		$('#btnNewCard').click(function() {
+    			$('#txtQuestion').val('');
+    			$('#txtAnswer').val('');
+    			$.mobile.changePage("#newCard", { transition: "slideup" });
+    		});
 
-		$('#btnSaveNewCard').click(function () {
-			var cards = JSON.parse(localStorage['flashcards']);
-			cards.push(
-			{
-				'question' :  $('#txtQuestion').val(),
-				'answer' : $('#txtAnswer').val(),
-			});
+    		$('#btnSaveNewCard').click(function () {
+    			var cards = JSON.parse(localStorage['flashcards']);
+    			cards.push(
+				{
+					'question' :  $('#txtQuestion').val(),
+					'answer' : $('#txtAnswer').val(),
+				});
 
-			// save the new question to local storage
-			window.localStorage['flashcards'] = JSON.stringify(cards);
+    			// save the new question to local storage
+    			window.localStorage['flashcards'] = JSON.stringify(cards);
 
-			// return to the question list. The list will be refreshed by the home page's
-			// pagebeforeshow event.
-			$.mobile.changePage("#home", { transition: "slideup", direction: "reverse" });
-		});
+    			// return to the question list. The list will be refreshed by the home page's
+    			// pagebeforeshow event.
+    			$.mobile.changePage("#home", { transition: "slideup", direction: "reverse" });
+    		});
 
-    	//***********************************************************
-    	// Question Page
-		$('#question').on('pagebeforeshow', function (sender, args) {
-			var cards = JSON.parse(localStorage['flashcards']);
-			var id = sessionStorage['questionID'];
-			$('#questionText').html(cards[id]['question']);
+    		//***********************************************************
+    		// Question Page
+    		$('#question').on('pagebeforeshow', function (sender, args) {
+    			var cards = JSON.parse(localStorage['flashcards']);
+    			var id = sessionStorage['questionID'];
+    			$('#questionText').html(cards[id]['question']);
 
-			setNavigationButtonVisibility(id, cards.length);
-		});
+    			setNavigationButtonVisibility(id, cards.length);
+    		});
 
-    	//@bug: slide transition to same page makes page disappear
-		$('#question').on('pageshow', function (sender, args) {
-			$(this).addClass('ui-page-active');
-		});
+    		//@bug: slide transition to same page makes page disappear
+    		$('#question').on('pageshow', function (sender, args) {
+    			$(this).addClass('ui-page-active');
+    		});
 
-    	// since we're transitioning to the same page we need to manually call the 
-		// changepage function for the next and prev buttons on the question page
-		$('#btnQuestionPrev').click(function () {
-			decrementQuestionID();
-			var id = sessionStorage['questionID'];
-			$.mobile.changePage("#question", { transition: "slide", reverse: true, allowSamePageTransition : true });
-		});
+    		// since we're transitioning to the same page we need to manually call the 
+    		// changepage function for the next and prev buttons on the question page
+    		$('#btnQuestionPrev').click(function () {
+    			decrementQuestionID();
+    			var id = sessionStorage['questionID'];
+    			$.mobile.changePage("#question", { transition: "slide", reverse: true, allowSamePageTransition : true });
+    		});
 
-		$('#btnQuestionNext').click(function () {
-			incrementQuestionID();
-			var id = sessionStorage['questionID'];
-			$.mobile.changePage("#question", { transition: "slide", allowSamePageTransition: true });
-		});
+    		$('#btnQuestionNext').click(function () {
+    			incrementQuestionID();
+    			var id = sessionStorage['questionID'];
+    			$.mobile.changePage("#question", { transition: "slide", allowSamePageTransition: true });
+    		});
 
-		//***********************************************************
-		// Answer Page
-		$('#answer').on('pagebeforeshow', function (sender, args) {
-			var cards = JSON.parse(localStorage['flashcards']);
-			var id = sessionStorage['questionID'];
-			$('#answerText').html(cards[id]['answer']);
+    		//***********************************************************
+    		// Answer Page
+    		$('#answer').on('pagebeforeshow', function (sender, args) {
+    			var cards = JSON.parse(localStorage['flashcards']);
+    			var id = sessionStorage['questionID'];
+    			$('#answerText').html(cards[id]['answer']);
 
-			setNavigationButtonVisibility(id, cards.length);
-		});
+    			setNavigationButtonVisibility(id, cards.length);
+    		});
 
-		$('#btnAnswerPrev').click(function () {
-			decrementQuestionID();
-		});
+    		$('#btnAnswerPrev').click(function () {
+    			decrementQuestionID();
+    		});
 
-		$('#btnAnswerNext').click(function () {
-			incrementQuestionID();
-		});
+    		$('#btnAnswerNext').click(function () {
+    			incrementQuestionID();
+    		});
+    	}
+    	catch (err) {
+    		alert(err.message);
+    	}
 
 		// Once we've finished loading switch to the home screen
 		$.mobile.changePage("#home", { transition: "fade" });
