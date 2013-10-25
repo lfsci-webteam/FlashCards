@@ -48,7 +48,6 @@ var app = {
 			//***********************************************************
 			// If this is the first time running the app add a default 
 			// flash card. Otherwise load the cards from local storage
-			localStorage.clear();
 			if (localStorage['first-run'] == null) {
 				localStorage['first-run'] = false;
 				var cards = [];
