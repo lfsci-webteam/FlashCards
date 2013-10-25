@@ -49,14 +49,14 @@ var app = {
 			// If this is the first time running the app add a default 
 			// flash card. Otherwise load the cards from local storage
 			localStorage.clear();
-			if (window.localStorage['first-run'] == null) {
-				window.localStorage['first-run'] = false;
+			if (localStorage['first-run'] == null) {
+				localStorage['first-run'] = false;
 				var cards = [];
 				var defaultQuestion =
 				{
 					'question': 'What is the answer to life, the universe, and everything?',
 					'answer': 42,
-					'options': ['Peace', '42', 'Love', 'Bacon'],
+					'options': ['World Peace', '42', 'Love', 'Bacon'],
 				};
 				cards.push(defaultQuestion);
 				defaultQuestion =
@@ -67,26 +67,59 @@ var app = {
 				};
 				cards.push(defaultQuestion);
 
-				window.localStorage['flashcards'] = JSON.stringify(cards);
+				localStorage['flashcards'] = JSON.stringify(cards);
 			}
 
 			window.addEventListener('orientationchange', doOnOrientationChange);
-			$('#home').on('pagebeforeshow', refreshCardList);
 
 			//***********************************************************
-			// New Card Dialog
-			$('#btnNewCard').click(function () {
-				$('#txtQuestion').val('');
-				$('#txtAnswer').val('');
-				$.mobile.changePage("#newCard", { transition: "slideup" });
-			});
+			// Card List Page
+			$('#cardList').on('pagebeforeshow', refreshCardList);
 
-			$('#newCard').on('pagebeforeshow', function () {
-				$('#flipMultipleChoice').val("no");
+			//***********************************************************
+			// Edit Card List Page
+			$('#editCardList').on('pagebeforeshow', refreshEditCardList);
+
+
+			//***********************************************************
+			// Edit/Add Card Dialog
+			//$('#btnNewCard').click(function () {
+			//	setQuestionID(-1);
+			//	$.mobile.changePage("#editCard", { transition: "slideup" });
+			//});
+
+			$('#editCard').on('pagebeforeshow', function () {
+				var id = sessionStorage['questionID'];
+				$('#divOptions').empty();
+				if (id == -1) {
+					$('#txtQuestion').val('');
+					$('#txtAnswer').val('');
+					$('#flipMultipleChoice').val("no");
+					$('#divOptions, #btnAddOption').hide();
+					addOptionBox('');
+				}
+				else {
+					var cards = JSON.parse(localStorage['flashcards']);
+					var currentCard = cards[id];
+
+					$('#txtQuestion').val(currentCard.question);
+					$('#txtAnswer').val(currentCard.answer);
+
+					if (currentCard.options.length > 0) {
+						$('#flipMultipleChoice').val("yes");
+						$('#divOptions, #btnAddOption').show();
+
+						for (var j = 0; j < currentCard.options.length; j++) {
+							addOptionBox(currentCard.options[j]);
+						}
+					}
+					else {
+						$('#flipMultipleChoice').val("no");
+						$('#divOptions, #btnAddOption').hide();
+						addOptionBox('');
+					}
+				}
 				$('#flipMultipleChoice').slider("refresh");
-				$('#divOptions, #btnAddOption').hide();
-				$('.optionTextBox').remove();
-				addOptionBox();
 			});
 
 			$('#flipMultipleChoice').on('change', function () {
@@ -101,10 +134,11 @@ var app = {
 
 
 			$('#btnAddOption').click(function () {
-				addOptionBox();
+				addOptionBox('');
 			});
 
-			$('#btnSaveNewCard').click(function () {
+			$('#btnSaveCard').click(function () {
+				var id = sessionStorage['questionID'];
 				var cards = JSON.parse(localStorage['flashcards']);
 				var newCard =
 				{
@@ -120,14 +154,29 @@ var app = {
 					});
 				}
 
-				cards.push(newCard);
+				if (id == -1)
+					cards.push(newCard);
+				else {
+					cards[id] = newCard;
+				}
 
 				// save the new question to local storage
-				window.localStorage['flashcards'] = JSON.stringify(cards);
+				localStorage['flashcards'] = JSON.stringify(cards);
 
 				// return to the question list. The list will be refreshed by the home page's
 				// pagebeforeshow event.
-				$.mobile.changePage("#home", { transition: "slideup", direction: "reverse" });
+				if (id == -1)
+					$.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
+				else
+					$.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
+			});
+
+			$('#btnCancelEditCard').click(function () {
+				var id = sessionStorage['questionID'];
+				if (id == -1)
+					$.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
+				else 
+					$.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
 			});
 
 			//***********************************************************
@@ -149,7 +198,7 @@ var app = {
 					$('.optionList').hide();
 				}
 				setNavigationButtonVisibility(id, cards.length);
-				window.localStorage['selectedAnswer'] = '';
+				localStorage['selectedAnswer'] = '';
 				$('.answerSummaryDiv').hide();
 				$('.userAnswer').html('');
 				$('.actualAnswer').html('');
@@ -170,14 +219,14 @@ var app = {
 						return;
 
 					// if they get it wrong mark it as red
-					if (userAnswer != actualAnswer) {
+					if (userAnswer.toLowerCase() != actualAnswer.toLowerCase()) {
 						$(".selectedAnswer").buttonMarkup({ theme: 'r' });
 					};
 
 					// highlight the correct answer
 					$('.answerOptionButton').each(function () {
 						var answer = $(this).find('a').html();
-						if (answer == actualAnswer) {
+						if (answer.toLowerCase() == actualAnswer.toLowerCase()) {
 							$(this).buttonMarkup({ theme: 'g' });
 						}
 					});
@@ -189,7 +238,7 @@ var app = {
 					userAnswer = txtUserInput.val();
 					if (userAnswer == '')
 						return;
-					if (userAnswer == actualAnswer) {
+					if (userAnswer.toLowerCase() == actualAnswer.toLowerCase()) {
 						txtUserInput.parent().removeClass("ui-body-c").removeClass("ui-body-r").addClass("ui-body-g");
 					}
 					else {
@@ -199,6 +248,16 @@ var app = {
 				$('.answerSummaryDiv').show();
 				$('.userAnswer').html(userAnswer);
 				$('.actualAnswer').html(actualAnswer);
+			});
+
+			$(".randomQuestionButton").click(function () {
+				var cards = JSON.parse(localStorage['flashcards']);
+				var id = sessionStorage['questionID'];
+				do {
+					var nextID = Math.floor(Math.random() * (cards.length));
+				}
+				while (nextID == id);
+				sessionStorage['questionID'] = nextID;
 			});
 
 
@@ -242,7 +301,7 @@ var app = {
 		}
 
 		// Once we've finished loading switch to the home screen
-		$.mobile.changePage("#home", { transition: "fade" });
+		$.mobile.changePage("#cardList", { transition: "fade" });
 	},
 
 	receivedEvent: function (id) {
@@ -250,8 +309,12 @@ var app = {
 	}
 };
 
-function addOptionBox() {
-	var txtOption = '<input type="text" class="optionTextBox" />';
+function addOptionBox(optionText) {
+	var txtOption = '';
+	if (optionText != '')
+		txtOption = '<input type="text" class="optionTextBox" value="' + optionText + '" />';
+	else
+		txtOption = '<input type="text" class="optionTextBox" />';
 	$('#divOptions').append(txtOption);
 	$('.optionTextBox').textinput();
 }
@@ -285,7 +348,7 @@ function refreshOptionList(options) {
 		$(".answerOptionButton").removeClass("selectedAnswer");
 		$(this).buttonMarkup({ theme: 'b' });
 		$(this).addClass("selectedAnswer");
-		window.localStorage['selectedAnswer'] = $(this).find('a')[0].innerHTML;
+		localStorage['selectedAnswer'] = $(this).find('a')[0].innerHTML;
 
 
 		// Use this code for multi-select questions
@@ -304,31 +367,44 @@ function refreshOptionList(options) {
 
 function refreshCardList() {
 	var cards = JSON.parse(localStorage['flashcards']);
-	var cardList = $('#cardList');
-	cardList.empty();
+	var cardListView = $('#cardListView');
+	cardListView.empty();
 
 	for (var i = 0; i < cards.length; i++) {
 		var card = cards[i];
 		var text = cards[i]['question'];
 
-		var deleteButton = '';
-		if (true)
-			//if (sessionStorage['editMode'] == true)
-		{
-			deleteButton = '<a data-iconpos="notext" onclick="deleteQuestion(' + i + ')" data-rel="external">Delete</a>';
-		}
-		var listItem = '<li><a href="#question" onclick="setQuestionID(' + i + ')" data-transition="slide">' + text + '</a>' + deleteButton + '</li>';
-		cardList.append(listItem);
+		var linkButton = '<a href="#question" data-role="button" onclick="setQuestionID(' + i + ')" data-transition="slide">' + text + '</a>';
+		var listItem = '<li>' + linkButton + '</li>';
+		cardListView.append(listItem);
 	}
-	cardList.listview("refresh");
+	cardListView.listview("refresh");
+}
+
+function refreshEditCardList() {
+	var cards = JSON.parse(localStorage['flashcards']);
+	var cardListView = $('#editCardListView');
+	cardListView.empty();
+
+	for (var i = 0; i < cards.length; i++) {
+		var card = cards[i];
+		var text = cards[i]['question'];
+
+		var linkButton = '<a href="#editCard" data-role="button" onclick="setQuestionID(' + i + ')" data-transition="slideup">' + text + '</a>';
+		var deleteButton = '<a data-role="button" data-icon="trash" data-iconpos="notext" onclick="deleteQuestion(' + i + ');">Delete</a>';
+		var listItem = '<li>' + linkButton + deleteButton + '</li>';
+		cardListView.append(listItem);
+	}
+	cardListView.listview("refresh");
 }
 
 function deleteQuestion(id) {
 	var cards = JSON.parse(localStorage['flashcards']);
 	cards.splice(id, 1);
-	window.localStorage['flashcards'] = JSON.stringify(cards);
-	refreshCardList();
+	localStorage['flashcards'] = JSON.stringify(cards);
+	refreshEditCardList();
 }
+
 function setQuestionID(id) {
 	sessionStorage['questionID'] = id;
 }
@@ -349,7 +425,7 @@ function setNavigationButtonVisibility(id, numCards) {
 }
 
 //setTimeout(function () {
-//	$.mobile.changePage("#home", { transition: "fade" });
+//	$.mobile.changePage("#cardList", { transition: "fade" });
 
 //	$('#question').on('pagebeforechange', function (event, data) {
 //		alert(JSON.stringify(data, null, 4));
