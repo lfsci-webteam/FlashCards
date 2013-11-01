@@ -174,7 +174,7 @@ var app = {
 				var id = sessionStorage['questionID'];
 				if (id == -1)
 					$.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
-				else 
+				else
 					$.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
 			});
 
@@ -431,19 +431,26 @@ function setNavigationButtonVisibility(id, numCards) {
 		$('#btnQuestionNext, #btnQuestionNext2').show();
 }
 
-//setTimeout(function () {
-//	$.mobile.changePage("#cardList", { transition: "fade" });
-
-//	$('#question').on('pagebeforechange', function (event, data) {
-//		alert(JSON.stringify(data, null, 4));
-//		$('#questionText').html('Hey');
-//	});
-
-//}, 2000);
-
 //***********************************************************
 // Photo Capture methods
+
+
 function capturePhoto() {
+	//window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+	//window.webkitStorageInfo.requestQuota(PERSISTENT, 1024 * 1024, function (grantedBytes) {
+	//	window.requestFileSystem(PERSISTENT, 0, function (fileSys) {
+	//		fileSys.root.getDirectory("cardImages", { create: true, exclusive: false }, function (dir) {
+	//			alert('directory cardImages created');
+	//			fileSys.root.getFile('test.txt', {create: true, exclusive: true}, 
+	//			function (fileEntry) {
+
+	//			}, errorHandler);
+	//		}, fail);
+	//	}, fail);
+	//}, function (e) {
+	//	console.log('Error', e);
+	//});
+
 	try
 	{
 		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI });
@@ -464,12 +471,13 @@ function createFileEntry(imageURI) {
 
 function copyPhoto(fileEntry) {
 	document.getElementById('imgCapturedPhoto').src = fileEntry.toURL();
-	//window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
-	//	fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
-	//		alert('beginning copy to' + JSON.stringify(dir));
-	//		fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-	//	}, fail);
-	//}, function () { alert('file system error'); });
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
+			fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
+				alert('beginning copy to' + JSON.stringify(dir));
+				alert(fileEntry.toURI);
+				fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+			}, fail);
+	}, fail);
 }
 
 function onCopySuccess(entry) {
