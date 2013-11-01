@@ -463,12 +463,13 @@ function createFileEntry(imageURI) {
 }
 
 function copyPhoto(fileEntry) {
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
-		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
-			alert('beginning copy to' + dir);
-			fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-		}, fail);
-	}, function () { alert('file system error'); });
+	document.getElementById('imgCapturedPhoto').src = fileEntry.toURL();
+	//window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
+	//	fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
+	//		alert('beginning copy to' + JSON.stringify(dir));
+	//		fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+	//	}, fail);
+	//}, function () { alert('file system error'); });
 }
 
 function onCopySuccess(entry) {
