@@ -455,14 +455,17 @@ function capturePhoto() {
 }
 
 function onPhotoURISuccess(imageURI) {
+	alert('PhotoURISuccess');
 	createFileEntry(imageURI);
 }
 
 function createFileEntry(imageURI) {
+	alert('Creating File Entry')
 	window.resolveLocalFileSystemURI(imageURI, copyPhoto, fail);
 }
 
 function copyPhoto(fileEntry) {
+	alert('Copying Photo');
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
 			fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
@@ -475,5 +478,6 @@ function onCopySuccess(entry) {
 }
 
 function fail(error) {
+	alert("Failure: " + error.code);
 	console.log(error.code);
 }
