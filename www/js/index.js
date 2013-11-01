@@ -473,8 +473,10 @@ function copyPhoto(fileEntry) {
 	document.getElementById('imgCapturedPhoto').src = fileEntry.toURL();
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 			fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
-				alert('beginning copy to' + JSON.stringify(dir));
-				alert(fileEntry.toURI);
+				alert('beginning copy to' + dir.fullPath);
+				alert(fileEntry.toURL());
+
+				// TODO: Check if the file exists first. If so, delete it.
 				fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
 			}, fail);
 	}, fail);
