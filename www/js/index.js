@@ -463,12 +463,35 @@ function createFileEntry(imageURI) {
 }
 
 function copyPhoto(fileEntry) {
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
-		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
-			alert('beginning copy to' + dir);
-			fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-		}, fail);
-	}, fail);
+	//window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
+	//	fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
+	//		alert('beginning copy to' + dir);
+	//		fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+	//	}, fail);
+	//}, fail);
+
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+		fs.root.getFile("temp", { create: true, exclusive: false },
+		  function (entry) {
+		  	fileTransfer.download(
+					Url, // the filesystem uri you mentioned
+					entry.fullPath,
+					function (entry) {
+						// do what you want with the entry here
+						alert("download complete: " + entry.fullPath);
+					},
+					function (error) {
+						alert("error source " + error.source);
+						alert("error target " + error.target);
+						alert("error code " + error.code);
+					},
+					false,
+					null
+			);
+		  }, function () {
+		  	alert("file create error");
+		  });
+	}, null);
 }
 
 function onCopySuccess(entry) {
