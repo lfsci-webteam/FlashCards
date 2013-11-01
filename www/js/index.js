@@ -294,6 +294,14 @@ var app = {
 			//$('#btnAnswerNext').click(function () {
 			//	incrementQuestionID();
 			//});
+
+
+			//***********************************************************
+			// Get Photo
+			$('#btnGetImage').click(function () {
+				capturePhoto();
+			});
+
 		}
 		catch (err) {
 			alert(err.message);
@@ -433,3 +441,32 @@ function setNavigationButtonVisibility(id, numCards) {
 
 //}, 2000);
 
+//***********************************************************
+// Photo Capture methods
+function capturePhoto() {
+	navigator.Camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI });
+}
+
+function onPhotoURISuccess(imageURI) {
+	createFileEntry(imageURI);
+}
+
+function createFileEntry(imageURI) {
+	window.resolveLocalFileSystemURI(imageURI, copyPhoto, fail);
+}
+
+function copyPhoto(fileEntry) {
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
+		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
+			fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+		}, fail);
+	}, fail);
+}
+
+function onCopySuccess(entry) {
+	console.log(entry.fullPath)
+}
+
+function fail(error) {
+	console.log(error.code);
+}
