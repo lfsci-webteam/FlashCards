@@ -470,7 +470,6 @@ function createFileEntry(imageURI) {
 }
 
 function copyPhoto(fileEntry) {
-	document.getElementById('imgCapturedPhoto').src = fileEntry.toURL();
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 			fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
 				alert('beginning copy to' + dir.fullPath);
@@ -478,6 +477,7 @@ function copyPhoto(fileEntry) {
 
 				// TODO: Check if the file exists first. If so, delete it.
 				fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+				document.getElementById('imgCapturedPhoto').src = dir.fullPath + "/file.jpg";
 			}, fail);
 	}, fail);
 }
