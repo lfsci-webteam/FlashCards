@@ -467,17 +467,17 @@ function createFileEntry(imageURI) {
 function copyPhoto(fileEntry) {
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
+			alert('beginning copy to' + dir);
 			fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
 		}, fail);
 	}, fail);
 }
 
 function onCopySuccess(entry) {
-	console.log(entry.fullPath)
 	alert('Photo Copied Successfully: ' + entry.fullPath);
 }
 
 function fail(error) {
 	alert("Failure: " + error.code);
-	console.log(error.code);
 }
+
