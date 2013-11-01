@@ -446,7 +446,9 @@ function setNavigationButtonVisibility(id, numCards) {
 function capturePhoto() {
 	try
 	{
-		navigator.Camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI });
+		alert(navigator);
+		alert(navigator.camera);
+		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI });
 	}
 	catch (exception)
 	{
