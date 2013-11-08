@@ -302,7 +302,7 @@ var app = {
 				capturePhotoEdit();
 			});
 			$('#btnChoosePhoto').click(function () {
-				capturePhoto(pictureSource.PHOTOLIBRARY);
+				capturePhoto(navigator.camera.PictureSourceType.PHOTOLIBRARY);
 			});
 
 		}
