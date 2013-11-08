@@ -475,6 +475,7 @@ function onPhotoURISuccess(imageURI) {
 }
 
 function createFileEntry(imageURI) {
+	alert("camera uri: " + imageURI);
 	window.resolveLocalFileSystemURI(imageURI, copyPhotoToTemp, fail);
 }
 
@@ -524,6 +525,7 @@ function copyPhotoToPersistent(fileEntry) {
 function onTempCopySuccess(entry) {
 	document.getElementById('imgCapturedPhoto').src = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
 	localStorage['tempFileURL'] = entry.fullPath;
+	alert(entry.fullPath);
 }
 
 function onPersistentCopySuccess(entry) {
@@ -548,6 +550,9 @@ function fail(e) {
 			break;
 		case FileError.INVALID_STATE_ERR:
 			msg = 'INVALID_STATE_ERR';
+			break;
+		case FileError.ENCODING_ERR:
+			msg = "ENCODING_ERR: The URL is malformed";
 			break;
 		default:
 			msg = e.code;
