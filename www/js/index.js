@@ -460,13 +460,11 @@ function createFileEntry(imageURI) {
 function copyPhoto(fileEntry) {
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 			fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
-				alert('beginning copy to' + dir.fullPath);
-				alert(fileEntry.toURL());
-
+				
 				// Check if the file exists first. If so, delete it.
 				dir.getFile("file.jpg", { create: false }, function (toDelete) {
 					toDelete.remove(function () {
-						fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+						fileEntry.copyTo(dir, "file.jpg", onOverwriteSuccess, fail);
 					}, function () { alert('Failed to delete file'); });
 				},
 				function (e)
@@ -479,11 +477,11 @@ function copyPhoto(fileEntry) {
 	}, fail);
 }
 
-function onCopySuccess(entry) {
-	alert('Photo Copied Successfully: ' + entry.fullPath);
-	document.getElementById('imgCapturedPhoto').src = entry.fullPath;
-}
 
+
+function onCopySuccess(entry) {
+	document.getElementById('imgCapturedPhoto').src = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
+}
 
 function fail(e) {
 	var msg = '';
