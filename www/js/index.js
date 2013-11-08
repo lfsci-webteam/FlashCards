@@ -299,7 +299,7 @@ var app = {
 			//***********************************************************
 			// Get Photo
 			$('#btnTakePhoto').click(function () {
-				capturePhotoEdit();
+				capturePhoto(navigator.camera.PictureSourceType.CAMERA);
 			});
 			$('#btnChoosePhoto').click(function () {
 				capturePhoto(navigator.camera.PictureSourceType.PHOTOLIBRARY);
@@ -437,14 +437,10 @@ function setNavigationButtonVisibility(id, numCards) {
 //***********************************************************
 // Photo Capture methods
 
-function capturePhotoEdit() {
-	navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, });
-}
-
 function capturePhoto(source) {
 	try
 	{
-		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, });
+		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, targetWidth: 400, targetHeight: 400, });
 	}
 	catch (exception)
 	{
@@ -506,8 +502,7 @@ function fail(e) {
 			msg = 'INVALID_STATE_ERR';
 			break;
 		default:
-			msg = 'Unknown Error';
-			break;
+			return; // if there's no error code they just cancelled out of the camera, so do nothing.
 	};
 
 	alert('Error: ' + msg);

@@ -54,7 +54,7 @@
 	<div data-role="page" id="cardList">
 		<div data-role="header">
 			<a data-role="button" class="ui-btn-left" id="btnEditCardList" data-icon="edit" href="#editCardList"
-			data-iconpos="notext" data-transition="slideup">Edit</a>
+				data-iconpos="notext" data-transition="slideup">Edit</a>
 			<a data-role="button" id="btnNewCard" data-icon="plus" data-iconpos="notext" href="#editCard" data-transition="slideup"
 				class="ui-btn-right" onclick="setQuestionID(-1);">New Card
 			</a>
@@ -64,9 +64,7 @@
 			<ul data-role="listview" id="cardListView" data-split-theme="d" data-split-icon="delete">
 			</ul>
 		</div>
-		<a data-role="button" id="btnTakePhoto" data-icon="plus">Take Photo</a>
-		<a data-role="button" id="btnChoosePhoto" data-icon="plus">Choose Photo from library</a>
-		<img src="" id="imgCapturedPhoto" style="width: 400px; height: 200px;" />
+
 	</div>
 
 	<!--**********************************************************************************-->
@@ -75,8 +73,8 @@
 	<div data-role="page" id="editCardList">
 		<div data-role="header">
 			<h3>Edit Card List</h3>
-			<a data-role="button" class="ui-btn-right" id="btnEditCard" data-iconpos="notext" data-icon="check" 
-			href="#cardList" data-transition="slideup" data-direction="reverse"></a>
+			<a data-role="button" class="ui-btn-right" id="btnEditCard" data-iconpos="notext" data-icon="check"
+				href="#cardList" data-transition="slideup" data-direction="reverse"></a>
 		</div>
 		<div data-role="content">
 			<ul data-role="listview" id="editCardListView" data-split-theme="d" data-split-icon="delete">
@@ -97,11 +95,14 @@
 			<input type="text" name="txtQuestion" id="txtQuestion" value="" />
 			<label for="txtAnswer">Answer Text:</label>
 			<input type="text" name="txtAnswer" id="txtAnswer" value="" />
+			<a data-role="button" id="btnTakePhoto" data-icon="plus">Take Photo</a>
+			<a data-role="button" id="btnChoosePhoto" data-icon="plus">Choose Photo from library</a>
+			<img src="" id="imgCapturedPhoto" class="photoDisplay" />
 			<label for="flipMultipleChoice">Multiple Choice?</label>
 			<select name="flipMultipleChoice" id="flipMultipleChoice" data-role="slider">
 				<option value="no">No</option>
 				<option value="yes">Yes</option>
-			</select> 
+			</select>
 			<div id="divOptions" runat="server" style="display: none">
 				<label class="ui-input-text">Options:</label>
 				<!--<input type="text" name="txtOption1" id="txtOption1" class="optionTextBox" />-->
