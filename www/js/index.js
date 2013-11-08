@@ -475,8 +475,20 @@ function copyPhoto(fileEntry) {
 				alert('beginning copy to' + dir.fullPath);
 				alert(fileEntry.toURL());
 
-				// TODO: Check if the file exists first. If so, delete it.
+				// Check if the file exists first. If so, delete it.
+				dir.getFile("file.jpg", { create: false }, function (toDelete) {
+					toDelete.remove(function () {
+						fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+					}, fail);
+				},
+				function (e)
+				{
+					fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+				});
+
 				fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+
+
 				document.getElementById('imgCapturedPhoto').src = dir.fullPath + "/file.jpg";
 			}, fail);
 	}, fail);
@@ -485,6 +497,7 @@ function copyPhoto(fileEntry) {
 function onCopySuccess(entry) {
 	alert('Photo Copied Successfully: ' + entry.fullPath);
 }
+
 
 function fail(e) {
 	var msg = '';
