@@ -464,7 +464,7 @@ function copyPhoto(fileEntry) {
 				// Check if the file exists first. If so, delete it.
 				dir.getFile("file.jpg", { create: false }, function (toDelete) {
 					toDelete.remove(function () {
-						fileEntry.copyTo(dir, "file.jpg", onOverwriteSuccess, fail);
+						fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
 					}, function () { alert('Failed to delete file'); });
 				},
 				function (e)
