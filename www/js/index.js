@@ -550,7 +550,8 @@ function fail(e) {
 			msg = 'INVALID_STATE_ERR';
 			break;
 		default:
-			return; // if there's no error code they just cancelled out of the camera, so do nothing.
+			msg = e;
+			break; 
 	};
 
 	alert('Error: ' + msg);
