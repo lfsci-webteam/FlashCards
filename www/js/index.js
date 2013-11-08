@@ -162,7 +162,7 @@ var app = {
 				// copy the temp file to a more permanent location
 				var finalID = id == -1 ? cards.length : id;
 				localStorage['fileDestinationURL'] = id.toString() + '.jpg';
-				alert(localStorage['fileDestinationURL']);
+				alert(localStorage['tempFileURL']);
 				if (localStorage['tempFileURL'] != '') {
 					window.resolveLocalFileSystemURI(localStorage['tempFileURL'], copyPhotoToPersistent, fail);
 					newCard.hasImage = 'true';
