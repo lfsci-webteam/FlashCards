@@ -479,23 +479,21 @@ function copyPhoto(fileEntry) {
 				dir.getFile("file.jpg", { create: false }, function (toDelete) {
 					toDelete.remove(function () {
 						fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-					}, fail);
+					}, function () { alert('Failed to delete file'); });
 				},
 				function (e)
 				{
+					alert('get existing file failed');
 					fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
 				});
 
-				fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-
-
-				document.getElementById('imgCapturedPhoto').src = dir.fullPath + "/file.jpg";
 			}, fail);
 	}, fail);
 }
 
 function onCopySuccess(entry) {
 	alert('Photo Copied Successfully: ' + entry.fullPath);
+	document.getElementById('imgCapturedPhoto').src = entry.fullPath;
 }
 
 
