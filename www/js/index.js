@@ -524,7 +524,7 @@ function copyPhotoToPersistent(fileEntry) {
 
 function onTempCopySuccess(entry) {
 	document.getElementById('imgCapturedPhoto').src = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
-	localStorage['tempFileURL'] = entry.fullPath;
+	localStorage['tempFileURL'] = 'file://localhost/' + entry.fullPath;
 	alert(entry.fullPath);
 }
 
