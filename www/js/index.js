@@ -441,7 +441,10 @@ function setNavigationButtonVisibility(id, numCards) {
 function capturePhoto(source) {
 	try
 	{
-		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, allowEdit: true, });
+		if (source == '')
+			navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, });
+		else
+			navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, allowEdit: true, });
 	}
 	catch (exception)
 	{
