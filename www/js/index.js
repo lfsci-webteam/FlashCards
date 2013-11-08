@@ -298,8 +298,11 @@ var app = {
 
 			//***********************************************************
 			// Get Photo
-			$('#btnGetImage').click(function () {
+			$('#btnTakePhoto').click(function () {
 				capturePhoto();
+			});
+			$('#btnChoosePhoto').click(function () {
+				capturePhoto(pictureSource.PHOTOLIBRARY);
 			});
 
 		}
@@ -435,25 +438,10 @@ function setNavigationButtonVisibility(id, numCards) {
 // Photo Capture methods
 
 
-function capturePhoto() {
-	//window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-	//window.webkitStorageInfo.requestQuota(PERSISTENT, 1024 * 1024, function (grantedBytes) {
-	//	window.requestFileSystem(PERSISTENT, 0, function (fileSys) {
-	//		fileSys.root.getDirectory("cardImages", { create: true, exclusive: false }, function (dir) {
-	//			alert('directory cardImages created');
-	//			fileSys.root.getFile('test.txt', {create: true, exclusive: true}, 
-	//			function (fileEntry) {
-
-	//			}, errorHandler);
-	//		}, fail);
-	//	}, fail);
-	//}, function (e) {
-	//	console.log('Error', e);
-	//});
-
+function capturePhoto(source) {
 	try
 	{
-		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI });
+		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, allowEdit: true, });
 	}
 	catch (exception)
 	{
