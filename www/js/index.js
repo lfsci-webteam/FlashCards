@@ -438,13 +438,13 @@ function setNavigationButtonVisibility(id, numCards) {
 // Photo Capture methods
 
 function capturePhotoEdit() {
-	navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, });
+	navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, });
 }
 
 function capturePhoto(source) {
 	try
 	{
-		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, allowEdit: true, });
+		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, });
 	}
 	catch (exception)
 	{
