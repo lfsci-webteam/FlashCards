@@ -550,7 +550,7 @@ function fail(e) {
 			msg = 'INVALID_STATE_ERR';
 			break;
 		default:
-			msg = e;
+			msg = e.code;
 			break; 
 	};
 
