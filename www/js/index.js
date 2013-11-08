@@ -500,11 +500,13 @@ function copyPhotoToTemp(fileEntry) {
 }
 
 function copyPhotoToPersistent(fileEntry) {
+	alert('requesting file system');
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
+		alert('getting root directory');
 		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
 
 			var fileName = localStorage['fileDestinationURL'];
-			alert('Copying temp file from ' + fileEntry.fullPath + ' to ' + localStorage['fileDestinationURL']);
+			alert('Copying temp file from ' + fileEntry.fullPath + ' to ' + fileName);
 			// Check if the file exists first. If so, delete it.
 			dir.getFile(fileName, { create: false }, function (toDelete) {
 				toDelete.remove(function () {
