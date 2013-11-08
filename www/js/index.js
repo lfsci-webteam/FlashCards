@@ -299,7 +299,7 @@ var app = {
 			//***********************************************************
 			// Get Photo
 			$('#btnTakePhoto').click(function () {
-				capturePhoto();
+				capturePhotoEdit();
 			});
 			$('#btnChoosePhoto').click(function () {
 				capturePhoto(pictureSource.PHOTOLIBRARY);
@@ -437,14 +437,14 @@ function setNavigationButtonVisibility(id, numCards) {
 //***********************************************************
 // Photo Capture methods
 
+function capturePhotoEdit() {
+	navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, });
+}
 
 function capturePhoto(source) {
 	try
 	{
-		if (source == '')
-			navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, });
-		else
-			navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, allowEdit: true, });
+		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, allowEdit: true, });
 	}
 	catch (exception)
 	{
@@ -462,21 +462,21 @@ function createFileEntry(imageURI) {
 
 function copyPhoto(fileEntry) {
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
-			fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
+		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
 				
-				// Check if the file exists first. If so, delete it.
-				dir.getFile("file.jpg", { create: false }, function (toDelete) {
-					toDelete.remove(function () {
-						fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-					}, function () { alert('Failed to delete file'); });
-				},
-				function (e)
-				{
-					alert('get existing file failed');
+			// Check if the file exists first. If so, delete it.
+			dir.getFile("file.jpg", { create: false }, function (toDelete) {
+				toDelete.remove(function () {
 					fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
-				});
+				}, function () { alert('Failed to delete file'); });
+			},
+			function (e)
+			{
+				alert('get existing file failed');
+				fileEntry.copyTo(dir, "file.jpg", onCopySuccess, fail);
+			});
 
-			}, fail);
+		}, fail);
 	}, fail);
 }
 
