@@ -202,7 +202,7 @@ var app = {
 
 				if (cards[id].imageURL != '') {
 					$('.photoDisplay').show();
-					$('.photoDisplay').attr('src', id.toString() + '.jpg');
+					$('.photoDisplay').attr('src', cards[id].imageURL);
 				} else
 					$('.photoDisplay').hide();
 
