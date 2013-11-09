@@ -56,7 +56,7 @@ var app = {
 					'question': 'What is the answer to life, the universe, and everything?',
 					'answer': 42,
 					'options': ['World Peace', '42', 'Love', 'Bacon'],
-					'hasImage' : false,
+					'imageURL' : '',
 				};
 				cards.push(defaultQuestion);
 				defaultQuestion =
@@ -64,7 +64,7 @@ var app = {
 					'question': 'What is the answer to life, the universe, and everything?',
 					'answer': 42,
 					'options': [],
-					'hasImage': false,
+					'imageURL': '',
 				};
 				cards.push(defaultQuestion);
 
@@ -97,6 +97,7 @@ var app = {
 					$('#txtAnswer').val('');
 					$('#flipMultipleChoice').val("no");
 					$('#divOptions, #btnAddOption').hide();
+					$('#imgCapturedPhoto').attr('src', '');
 					addOptionBox('');
 					localStorage['tempFileURL'] = '';
 					localStorage['fileDestinationURL'] = '';
@@ -108,6 +109,7 @@ var app = {
 
 					$('#txtQuestion').val(currentCard.question);
 					$('#txtAnswer').val(currentCard.answer);
+					$('#imgCapturedPhoto').attr('src', currentCard.imageURL);
 
 					if (currentCard.options.length > 0) {
 						$('#flipMultipleChoice').val("yes");
@@ -149,7 +151,7 @@ var app = {
 					'question': $('#txtQuestion').val(),
 					'answer': $('#txtAnswer').val(),
 					'options': [],
-					'hasImage' : 'false', // default to false. If there is an image we'll set it later
+					'imageURL' : '', // default to false. If there is an image we'll set it later
 				};
 
 				var choice = $('#flipMultipleChoice').val();
@@ -157,15 +159,6 @@ var app = {
 					$('.optionTextBox').each(function () {
 						newCard.options.push($(this).val());
 					});
-				}
-
-				// copy the temp file to a more permanent location
-				var finalID = id == -1 ? cards.length : id;
-				localStorage['fileDestinationURL'] = id.toString() + '.jpg';
-				if (localStorage['tempFileURL'] != '') {
-					alert(localStorage['tempFileURL']);
-					window.resolveLocalFileSystemURI(localStorage['tempFileURL'], copyPhotoToPersistent, fail);
-					newCard.hasImage = 'true';
 				}
 
 				if (id == -1)
@@ -176,6 +169,13 @@ var app = {
 
 				// save the new question to local storage
 				localStorage['flashcards'] = JSON.stringify(cards);
+
+				// copy the temp file to a more permanent location
+				var finalID = id == -1 ? cards.length : id;
+				localStorage['fileDestinationURL'] = id.toString() + '.jpg';
+				if (localStorage['tempFileURL'] != '') {
+					window.resolveLocalFileSystemURI(localStorage['tempFileURL'], copyPhotoToPersistent, fail);
+				}
 
 				// return to the question list. The list will be refreshed by the home page's
 				// pagebeforeshow event.
@@ -200,7 +200,7 @@ var app = {
 				var id = sessionStorage['questionID'];
 				$('.questionText').html(cards[id]['question']);
 
-				if (cards[id].hasImage == 'true') {
+				if (cards[id].imageURL != '') {
 					$('.photoDisplay').show();
 					$('.photoDisplay').attr('src', id.toString() + '.jpg');
 				} else
@@ -475,7 +475,6 @@ function onPhotoURISuccess(imageURI) {
 }
 
 function createFileEntry(imageURI) {
-	alert("camera uri: " + imageURI);
 	window.resolveLocalFileSystemURI(imageURI, copyPhotoToTemp, fail);
 }
 
@@ -501,13 +500,10 @@ function copyPhotoToTemp(fileEntry) {
 }
 
 function copyPhotoToPersistent(fileEntry) {
-	alert('requesting file system');
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
-		alert('getting root directory');
 		fileSys.root.getDirectory("photos", { create: true, exclusive: false }, function (dir) {
 
 			var fileName = localStorage['fileDestinationURL'];
-			alert('Copying temp file from ' + fileEntry.fullPath + ' to ' + fileName);
 			// Check if the file exists first. If so, delete it.
 			dir.getFile(fileName, { create: false }, function (toDelete) {
 				toDelete.remove(function () {
@@ -517,7 +513,6 @@ function copyPhotoToPersistent(fileEntry) {
 			function (e) {
 				fileEntry.copyTo(dir, fileName, onPersistentCopySuccess, fail);
 			});
-
 		}, fail);
 	}, fail);
 }
@@ -525,11 +520,19 @@ function copyPhotoToPersistent(fileEntry) {
 function onTempCopySuccess(entry) {
 	document.getElementById('imgCapturedPhoto').src = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
 	localStorage['tempFileURL'] = 'file://localhost/' + entry.fullPath;
-	alert(entry.fullPath);
 }
 
 function onPersistentCopySuccess(entry) {
 	alert('file copied successfully to ' + entry.fullPath);
+	var id = sessionStorage['questionID'];
+	var cards = JSON.parse(localStorage['flashcards']);
+	
+	if (id == -1) {
+		id = cards.length - 1;
+	}
+
+	cards[id].imageURL = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
+	localStorage['flashcards'] = JSON.stringify(cards);
 }
 
 function fail(e) {
