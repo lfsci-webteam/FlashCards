@@ -100,8 +100,9 @@
 			<!--***************** Photo *****************-->
 			<a data-role="button" id="btnTakePhoto" data-icon="plus">Take Photo</a>
 			<a data-role="button" id="btnChoosePhoto" data-icon="plus">Choose Photo</a>
-			<img src="" id="imgCapturedPhoto" />
-
+			<div class="photoDisplayBox">
+				<img src="" id="imgCapturedPhoto" class="photoDisplay" />
+			</div>
 			<!--***************** Multiple Choice *****************-->
 			<label for="flipMultipleChoice">Multiple Choice?</label>
 			<select name="flipMultipleChoice" id="flipMultipleChoice" data-role="slider">
@@ -137,7 +138,9 @@
 		<div data-role="content">
 			<div class="questionText"></div>
 			<div class="photoDisplayBox">
-				<img src="" id="imgQuestionDisplay" class="photoDisplay" />
+				<a href="#imgPopup" data-rel="popup" data-position="window">
+					<img src="" id="imgQuestionDisplay" class="photoDisplay" />
+				</a>
 			</div>
 			<ul data-role="listview" class="optionList" data-inset="true">
 			</ul>
@@ -158,6 +161,11 @@
 			</a>
 			<a data-role="button" data-icon="refresh" data-iconpos="right" class="randomQuestionButton ui-btn-right" href="#question2" data-transition="flip">Random</a>
 		</div>
+		<div data-role="popup" id="imgPopup" class="photopopup">
+		<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" 
+			data-iconpos="notext" class="ui-btn-right">Close</a>
+			<img src="" id="imgFullScreen" class="fullScreenImage" />
+		</div>
 	</div>
 	<!--We'll create two question pages and switch back and forth between them to make the transitions smooth-->
 	<div data-role="page" id="question2" class="questionPage">
@@ -173,7 +181,9 @@
 		<div data-role="content">
 			<div class="questionText"></div>
 			<div class="photoDisplayBox">
-				<img src="" id="imgQuestionDisplay2" class="photoDisplay" />
+				<a href="#imgPopup2" data-rel="popup" data-position="window">
+					<img src="" id="imgQuestionDisplay2" class="photoDisplay" />
+				</a>
 			</div>
 			<ul data-role="listview" class="optionList" data-inset="true">
 			</ul>
@@ -194,7 +204,16 @@
 			</a>
 			<a data-role="button" data-icon="refresh" data-iconpos="right" class="randomQuestionButton ui-btn-right" href="#question" data-transition="flip">Random</a>
 		</div>
+		<div data-role="popup" id="imgPopup2" class="photopopup">
+			<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" 
+			data-iconpos="notext" class="ui-btn-right">Close</a>
+			<img src="" id="imgFullScreen2" class="fullScreenImage" />
+		</div>
 	</div>
+
+	<!--**********************************************************************************-->
+
+
 
 	<!--**********************************************************************************-->
 

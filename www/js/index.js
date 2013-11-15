@@ -44,6 +44,8 @@ var app = {
 			receivedElement.setAttribute('style', 'display:block;');
 
 			app.receivedEvent('deviceready');
+
+			localStorage.clear();
 			//***********************************************************
 			// If this is the first time running the app add a default 
 			// flash card. Otherwise load the cards from local storage
@@ -55,7 +57,7 @@ var app = {
 					'question': 'What is the answer to life, the universe, and everything?',
 					'answer': '42',
 					'options': ['World Peace', '42', 'Love', 'Bacon'],
-					'imageURL': 'img/DarkwingDuck.png',
+					'imageURL': 'img/cloudSwirl.jpg',
 				};
 				cards.push(defaultQuestion);
 				defaultQuestion =
@@ -63,7 +65,7 @@ var app = {
 					'question': 'What is the answer to life, the universe, and everything?',
 					'answer': '42',
 					'options': [],
-					'imageURL': 'img/DarkwingDuck.png',
+					'imageURL': 'img/cloudSwirl.jpg',
 				};
 				cards.push(defaultQuestion);
 
@@ -201,7 +203,7 @@ var app = {
 
 				if (cards[id].imageURL != '') {
 					$('.photoDisplay').show();
-					$('.photoDisplay').attr('src', cards[id].imageURL);
+					$('.photoDisplay, .fullScreenImage').attr('src', cards[id].imageURL);
 				}
 				else
 					$('.photoDisplay').hide();
@@ -325,6 +327,17 @@ var app = {
 			});
 			$('#btnChoosePhoto').click(function () {
 				capturePhoto(navigator.camera.PictureSourceType.PHOTOLIBRARY);
+			});
+
+			//***********************************************************
+			// display photo
+			$(".photopopup").on({
+				popupbeforeposition: function () {
+					var maxHeight = $(window).height() - 90 + "px";
+					$(".photopopup img").css("max-height", maxHeight);
+					//var maxWidth = $(window).width() + "px";
+					//$(".photopopup img").css("max-width", maxWidth);
+				}
 			});
 
 		}
@@ -467,7 +480,7 @@ function setNavigationButtonVisibility(id, numCards) {
 function capturePhoto(source) {
 	try
 	{
-		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, targetWidth: 800, targetHeight: 400, });
+		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, targetWidth: 800, targetHeight: 800, });
 	}
 	catch (exception)
 	{
