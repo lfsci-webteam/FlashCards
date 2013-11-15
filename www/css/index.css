@@ -41,7 +41,6 @@ body
 	width: 100%;
 }
 
-/* Portrait layout (default) */
 .app
 {
 	background: url(../img/logo.png) no-repeat center top; /* 170px x 200px */
@@ -315,14 +314,18 @@ h1
 	padding: 5px;
 }
 
-.photoDisplay
+/* Phone Landscape layout (with min-width) */
+@media screen and (min-aspect-ratio: 1/1) and (max-width:400px)
 {
-	max-width: 280px;
-	max-height: 200px;
+	.photoDisplay
+	{
+		max-width: 280px;
+		max-height: 200px;
+	}
 }
 
-/* Landscape layout (with min-width) */
-@media screen and (min-aspect-ratio: 1/1) and (min-width:400px)
+/* Phone Landscape layout (with min-width) */
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) and (max-width: 800px)
 {
 	.app
 	{
@@ -336,7 +339,7 @@ h1
 	{
 		display: inline-block;
 		width: 35%;
-		height: 200px;
+		height: 170px;
 		vertical-align: top;
 	}
 
@@ -350,6 +353,6 @@ h1
 	.photoDisplay
 	{
 		max-width: 280px;
-		max-height: 200px;
+		max-height: 170px;
 	}
 }
