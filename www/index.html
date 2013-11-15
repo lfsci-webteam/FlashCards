@@ -96,12 +96,12 @@
 			<input type="text" name="txtQuestion" id="txtQuestion" value="" />
 			<label for="txtAnswer">Answer Text:</label>
 			<input type="text" name="txtAnswer" id="txtAnswer" value="" />
-					
+
 			<!--***************** Photo *****************-->
 			<a data-role="button" id="btnTakePhoto" data-icon="plus">Take Photo</a>
 			<a data-role="button" id="btnChoosePhoto" data-icon="plus">Choose Photo</a>
 			<img src="" id="imgCapturedPhoto" />
-			
+
 			<!--***************** Multiple Choice *****************-->
 			<label for="flipMultipleChoice">Multiple Choice?</label>
 			<select name="flipMultipleChoice" id="flipMultipleChoice" data-role="slider">
@@ -135,8 +135,10 @@
 			<h3>Question</h3>
 		</div>
 		<div data-role="content">
-			<span class="questionText"></span>
-			<img src="" id="imgQuestionDisplay" class="photoDisplay" />
+			<div class="questionText"></div>
+			<div class="photoDisplayBox">
+				<img src="" id="imgQuestionDisplay" class="photoDisplay" />
+			</div>
 			<ul data-role="listview" class="optionList" data-inset="true">
 			</ul>
 			<div class="freeResponseInput">
@@ -169,8 +171,10 @@
 			<h3>Question</h3>
 		</div>
 		<div data-role="content">
-			<span class="questionText"></span>
-			<img src="" id="imgQuestionDisplay2" class="photoDisplay" />
+			<div class="questionText"></div>
+			<div class="photoDisplayBox">
+				<img src="" id="imgQuestionDisplay2" class="photoDisplay" />
+			</div>
 			<ul data-role="listview" class="optionList" data-inset="true">
 			</ul>
 			<div class="freeResponseInput">

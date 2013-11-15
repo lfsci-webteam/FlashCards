@@ -44,7 +44,6 @@ var app = {
 			receivedElement.setAttribute('style', 'display:block;');
 
 			app.receivedEvent('deviceready');
-
 			//***********************************************************
 			// If this is the first time running the app add a default 
 			// flash card. Otherwise load the cards from local storage
@@ -54,17 +53,17 @@ var app = {
 				var defaultQuestion =
 				{
 					'question': 'What is the answer to life, the universe, and everything?',
-					'answer': 42,
+					'answer': '42',
 					'options': ['World Peace', '42', 'Love', 'Bacon'],
-					'imageURL' : '',
+					'imageURL': 'img/DarkwingDuck.png',
 				};
 				cards.push(defaultQuestion);
 				defaultQuestion =
 				{
 					'question': 'What is the answer to life, the universe, and everything?',
-					'answer': 42,
+					'answer': '42',
 					'options': [],
-					'imageURL': '',
+					'imageURL': 'img/DarkwingDuck.png',
 				};
 				cards.push(defaultQuestion);
 
@@ -98,10 +97,10 @@ var app = {
 					$('#flipMultipleChoice').val("no");
 					$('#divOptions, #btnAddOption').hide();
 					$('#imgCapturedPhoto').attr('src', '');
+
 					addOptionBox('');
 					localStorage['tempFileURL'] = '';
 					localStorage['fileDestinationURL'] = '';
-					document.getElementById('imgCapturedPhoto').src = '';
 				}
 				else {
 					var cards = JSON.parse(localStorage['flashcards']);
@@ -203,7 +202,8 @@ var app = {
 				if (cards[id].imageURL != '') {
 					$('.photoDisplay').show();
 					$('.photoDisplay').attr('src', cards[id].imageURL);
-				} else
+				}
+				else
 					$('.photoDisplay').hide();
 
 				var options = cards[id]['options'];
@@ -454,6 +454,11 @@ function setNavigationButtonVisibility(id, numCards) {
 		$('#btnQuestionNext, #btnQuestionNext2').hide();
 	else
 		$('#btnQuestionNext, #btnQuestionNext2').show();
+
+	if (numCards == 1)
+		$('.randomQuestionButton').hide();
+	else
+		$('.randomQuestionButton').show();
 }
 
 //***********************************************************
