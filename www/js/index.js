@@ -18,16 +18,13 @@
  */
 var app = {
 	// Application Constructor
-	initialize: function () {
-		this.bindEvents();
-	},
+	initialize: function () { this.bindEvents(); },
 	// Bind Event Listeners
 	//
 	// Bind any events that are required on startup. Common events are:
 	// 'load', 'deviceready', 'offline', and 'online'.
 	bindEvents: function () {
 		document.addEventListener('deviceready', this.onDeviceReady, false);
-
 	},
 	// deviceready Event Handler
 	//
@@ -131,18 +128,11 @@ var app = {
 
 			$('#flipMultipleChoice').on('change', function () {
 				var choice = $('#flipMultipleChoice').val();
-				if (choice == 'no') {
-					$('#divOptions, #btnAddOption').hide();
-				}
-				else {
-					$('#divOptions, #btnAddOption').show();
-				}
+				$('#divOptions, #btnAddOption').toggle(choice != 'no');
 			});
 
 
-			$('#btnAddOption').click(function () {
-				addOptionBox('');
-			});
+			$('#btnAddOption').click(function () { addOptionBox(''); });
 
 			$('#btnSaveCard').click(function () {
 				var id = sessionStorage['questionID'];
@@ -162,11 +152,8 @@ var app = {
 					});
 				}
 
-				if (id == -1)
-					cards.push(newCard);
-				else {
-					cards[id] = newCard;
-				}
+				if (id == -1) cards.push(newCard);
+				else cards[id] = newCard;
 
 				// save the new question to local storage
 				localStorage['flashcards'] = JSON.stringify(cards);
@@ -180,18 +167,14 @@ var app = {
 
 				// return to the question list. The list will be refreshed by the home page's
 				// pagebeforeshow event.
-				if (id == -1)
-					$.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
-				else
-					$.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
+				if (id == -1) $.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
+				else $.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
 			});
 
 			$('#btnCancelEditCard').click(function () {
 				var id = sessionStorage['questionID'];
-				if (id == -1)
-					$.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
-				else
-					$.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
+				if (id == -1) $.mobile.changePage("#cardList", { transition: "slideup", reverse: "true" });
+				else $.mobile.changePage("#editCardList", { transition: "slideup", reverse: "true" });
 			});
 
 			//***********************************************************
@@ -205,8 +188,7 @@ var app = {
 					$('.photoDisplay').show();
 					$('.photoDisplay, .fullScreenImage').attr('src', cards[id].imageURL);
 				}
-				else
-					$('.photoDisplay').hide();
+				else $('.photoDisplay').hide();
 
 				var options = cards[id]['options'];
 				if (options.length > 0) {
@@ -215,8 +197,7 @@ var app = {
 					$('.freeResponseInput').hide();
 					refreshOptionList(options);
 				}
-				else {
-					// free response
+				else {// free response
 					$('.freeResponseInput').show();
 					$('.optionList').hide();
 				}
@@ -238,8 +219,7 @@ var app = {
 				if (currentCard.options.length > 0) {
 					// multiple choice
 					userAnswer = localStorage['selectedAnswer'];
-					if (userAnswer == '')
-						return;
+					if (userAnswer == '') return;
 
 					// if they get it wrong mark it as red
 					if (userAnswer.toLowerCase() != actualAnswer.toLowerCase()) {
@@ -259,8 +239,7 @@ var app = {
 					// free response
 					var txtUserInput = currentPage.find('.freeResponseInput').find('input');
 					userAnswer = txtUserInput.val();
-					if (userAnswer == '')
-						return;
+					if (userAnswer == '') return;
 					if (userAnswer.toLowerCase() == actualAnswer.toLowerCase()) {
 						txtUserInput.parent().removeClass("ui-body-c").removeClass("ui-body-r").addClass("ui-body-g");
 					}
@@ -341,39 +320,31 @@ var app = {
 			});
 
 		}
-		catch (err) {
-			alert(err.message);
-		}
+		catch (err) { alert(err.message); }
 
 		// Once we've finished loading switch to the home screen
 		$.mobile.changePage("#cardList", { transition: "fade" });
 	},
 
-	receivedEvent: function (id) {
-		console.log('Received Event: ' + id);
-	}
+	receivedEvent: function (id) { console.log('Received Event: ' + id); }
 };
 
 function addOptionBox(optionText) {
-	var txtOption = '';
-	if (optionText != '')
-		txtOption = '<input type="text" class="optionTextBox" value="' + optionText + '" />';
-	else
-		txtOption = '<input type="text" class="optionTextBox" />';
+	var txtOption = '<input type="text" class="optionTextBox" ';
+	if (optionText != '') txtOption += 'value="' + optionText + '" ';
+	txtOption += '/>';
 	$('#divOptions').append(txtOption);
 	$('.optionTextBox').textinput();
 }
 
 function decrementQuestionID() {
 	var id = parseInt(sessionStorage['questionID']);
-	id -= 1;
-	sessionStorage['questionID'] = id;
+	sessionStorage['questionID'] = --id;
 }
 
 function incrementQuestionID() {
 	var id = parseInt(sessionStorage['questionID']);
-	id += 1;
-	sessionStorage['questionID'] = id;
+	sessionStorage['questionID'] = ++id;
 }
 
 function doOnOrientationChange() {
@@ -398,10 +369,8 @@ function refreshOptionList(options) {
 
 		// Use this code for multi-select questions
 		//var theme = $(this).attr("data-theme");
-		//if (theme == 'c')
-		//	$(this).buttonMarkup({ theme: 'b' });
-		//else
-		//	$(this).buttonMarkup({ theme: 'c' });
+		//if (theme == 'c') $(this).buttonMarkup({ theme: 'b' });
+		//else $(this).buttonMarkup({ theme: 'c' });
 	});
 	optionList.each(function () {
 		if ($(this).hasClass('ui-listview')) {
@@ -450,28 +419,17 @@ function deleteQuestion(id) {
 	refreshEditCardList();
 }
 
-function setQuestionID(id) {
-	sessionStorage['questionID'] = id;
-}
+function setQuestionID(id) { sessionStorage['questionID'] = id; }
 
 function setNavigationButtonVisibility(id, numCards) {
 
 	// Hide prev button if we're on the first question
-	if (id == 0)
-		$('#btnQuestionPrev, #btnQuestionPrev2').hide();
-	else
-		$('#btnQuestionPrev, #btnQuestionPrev2').show();
+	$('#btnQuestionPrev, #btnQuestionPrev2').toggle(id != 0);
 
 	// Hide next button if we're on the last question
-	if (id == numCards - 1)
-		$('#btnQuestionNext, #btnQuestionNext2').hide();
-	else
-		$('#btnQuestionNext, #btnQuestionNext2').show();
+	$('#btnQuestionNext, #btnQuestionNext2').toggle(id != numCards - 1);
 
-	if (numCards == 1)
-		$('.randomQuestionButton').hide();
-	else
-		$('.randomQuestionButton').show();
+	$('.randomQuestionButton').toggle(numCards != 1);
 }
 
 //***********************************************************
@@ -480,12 +438,15 @@ function setNavigationButtonVisibility(id, numCards) {
 function capturePhoto(source) {
 	try
 	{
-		navigator.camera.getPicture(onPhotoURISuccess, fail, { quality: 25, destinationType: Camera.DestinationType.FILE_URI, sourceType: source, targetWidth: 800, targetHeight: 800, });
+		navigator.camera.getPicture(onPhotoURISuccess, fail, {
+			quality: 25,
+			destinationType: Camera.DestinationType.FILE_URI,
+			sourceType: source,
+			targetWidth: 800,
+			targetHeight: 800,
+		});
 	}
-	catch (exception)
-	{
-		alert(exception.message);
-	}
+	catch (exception) { alert(exception.message); }
 }
 
 function onPhotoURISuccess(imageURI) {
@@ -528,15 +489,13 @@ function copyPhotoToPersistent(fileEntry) {
 					fileEntry.copyTo(dir, fileName, onPersistentCopySuccess, fail);
 				}, function () { alert('Failed to delete existing file'); });
 			},
-			function (e) {
-				fileEntry.copyTo(dir, fileName, onPersistentCopySuccess, fail);
-			});
+			function (e) { fileEntry.copyTo(dir, fileName, onPersistentCopySuccess, fail); });
 		}, fail);
 	}, fail);
 }
 
 function onTempCopySuccess(entry) {
-	document.getElementById('imgCapturedPhoto').src = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
+	document.getElementById('imgCapturedPhoto').src = entry.fullPath + '?' + new Date().getTime();// append the time so we're guaranteed to get the latest version
 	localStorage['tempFileURL'] = 'file://localhost/' + entry.fullPath;
 }
 
@@ -545,9 +504,7 @@ function onPersistentCopySuccess(entry) {
 	var id = sessionStorage['questionID'];
 	var cards = JSON.parse(localStorage['flashcards']);
 	
-	if (id == -1) {
-		id = cards.length - 1;
-	}
+	if (id == -1) id = cards.length - 1;
 
 	cards[id].imageURL = entry.fullPath + '?' + new Date().getTime(); // append the time so we're guaranteed to get the latest version
 	localStorage['flashcards'] = JSON.stringify(cards);
