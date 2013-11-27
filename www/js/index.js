@@ -41,6 +41,23 @@ var app = {
 
 			app.receivedEvent('deviceready');
 
+			var myUrl = 'http://lswebservices.byu.edu/holidays/HolidayService.svc/rest/GetHolidays/start/1-1-2013/end/1-1-2014';
+			$.ajax({
+				url: myUrl,
+				dataType: 'jsonp',
+				jsonp: 'callback',
+				timeout: 5000,
+				success: function (data, status) {
+					//data loaded
+					alert('success');
+					alert(data);
+				},
+				error: function () {
+					//error loading data
+					alert('failure');
+				}
+			});
+
 			//***********************************************************
 			// If this is the first time running the app add a default 
 			// flash card. Otherwise load the cards from local storage
