@@ -32,7 +32,6 @@ var app = {
 	// function, we must explicity call 'app.receivedEvent(...);'
 	onDeviceReady: function () {
 		try {
-
 			var parentElement = document.getElementById('deviceready');
 			var listeningElement = parentElement.querySelector('.listening');
 			var receivedElement = parentElement.querySelector('.received');
@@ -42,7 +41,6 @@ var app = {
 
 			app.receivedEvent('deviceready');
 
-			localStorage.clear();
 			//***********************************************************
 			// If this is the first time running the app add a default 
 			// flash card. Otherwise load the cards from local storage
@@ -200,12 +198,50 @@ var app = {
 				else {// free response
 					$('.freeResponseInput').show();
 					$('.optionList').hide();
+					var txtUserInput = $('.freeResponseInput').find('input');
+					txtUserInput.parent().removeClass("ui-body-g").removeClass("ui-body-r");
+					txtUserInput.val('');
 				}
 				setNavigationButtonVisibility(id, cards.length);
 				localStorage['selectedAnswer'] = '';
 				$('.answerSummaryDiv').hide();
 				$('.userAnswer').html('');
 				$('.actualAnswer').html('');
+			});
+
+			// swipe navigation for question pages.
+			$('#question').on('swipeleft', function () {
+				var id = parseInt(sessionStorage['questionID']);
+				var cards = JSON.parse(localStorage['flashcards']);
+				if (id < cards.length - 1) {
+					incrementQuestionID();
+					$.mobile.changePage("#question2", { transition: "slide", allowSamePageTransition: true });
+				}
+			});
+			$('#question2').on('swipeleft', function () {
+				var id = parseInt(sessionStorage['questionID']);
+				var cards = JSON.parse(localStorage['flashcards']);
+				if (id < cards.length - 1) {
+					incrementQuestionID();
+					$.mobile.changePage("#question", { transition: "slide", allowSamePageTransition: true });
+				}
+			});
+
+			$('#question').on('swiperight', function () {
+				var id = parseInt(sessionStorage['questionID']);
+				var cards = JSON.parse(localStorage['flashcards']);
+				if (id > 0) {
+					decrementQuestionID();
+					$.mobile.changePage("#question2", { transition: "slide",  reverse: true, allowSamePageTransition: true });
+				}
+			});
+			$('#question2').on('swiperight', function () {
+				var id = parseInt(sessionStorage['questionID']);
+				var cards = JSON.parse(localStorage['flashcards']);
+				if (id > 0) {
+					decrementQuestionID();
+					$.mobile.changePage("#question", { transition: "slide", reverse: true, allowSamePageTransition: true });
+				}
 			});
 
 			$(".checkAnswerButton").click(function () {
@@ -241,10 +277,10 @@ var app = {
 					userAnswer = txtUserInput.val();
 					if (userAnswer == '') return;
 					if (userAnswer.toLowerCase() == actualAnswer.toLowerCase()) {
-						txtUserInput.parent().removeClass("ui-body-c").removeClass("ui-body-r").addClass("ui-body-g");
+						txtUserInput.parent().removeClass("ui-body-r").addClass("ui-body-g");
 					}
 					else {
-						txtUserInput.parent().removeClass("ui-body-c").removeClass("ui-body-g").addClass("ui-body-r");
+						txtUserInput.parent().removeClass("ui-body-g").addClass("ui-body-r");
 					}
 				}
 				$('.answerSummaryDiv').show();
@@ -263,21 +299,12 @@ var app = {
 			});
 
 
-			//@bug: slide transition to same page makes page disappear
-			//$('#question').on('pageshow', function (sender, args) {
-			//	//$(this).addClass('ui-page-active');
-			//});
-
-			// since we're transitioning to the same page we need to manually call the 
-			// changepage function for the next and prev buttons on the question page
 			$('#btnQuestionPrev, #btnQuestionPrev2').click(function () {
 				decrementQuestionID();
-				//$.mobile.changePage("#question", { transition: "slide", reverse: true, allowSamePageTransition : true });
 			});
 
 			$('#btnQuestionNext, #btnQuestionNext2').click(function () {
 				incrementQuestionID();
-				//$.mobile.changePage("#question", { transition: "slide", allowSamePageTransition: true });
 			});
 
 			//***********************************************************
@@ -307,18 +334,6 @@ var app = {
 			$('#btnChoosePhoto').click(function () {
 				capturePhoto(navigator.camera.PictureSourceType.PHOTOLIBRARY);
 			});
-
-			//***********************************************************
-			// display photo
-			$(".photopopup").on({
-				popupbeforeposition: function () {
-					var maxHeight = $(window).height() - 90 + "px";
-					$(".photopopup img").css("max-height", maxHeight);
-					//var maxWidth = $(window).width() + "px";
-					//$(".photopopup img").css("max-width", maxWidth);
-				}
-			});
-
 		}
 		catch (err) { alert(err.message); }
 

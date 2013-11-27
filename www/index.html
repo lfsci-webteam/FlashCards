@@ -127,20 +127,15 @@
 
 	<div data-role="page" id="question" class="questionPage">
 		<div data-role="header">
-			<a id="btnQuestionPrev" data-role="button" data-icon="arrow-l" href="#question2" data-transition="slide" data-direction="reverse"
-				data-iconpos="left" class="prevQuestionButton ui-btn-left">Prev 
-			</a>
-			<a id="btnQuestionNext" data-role="button" data-icon="arrow-r" href="#question2" data-transition="slide"
-				data-iconpos="right" class="ui-btn-right">Next 
+			<a data-role="button" href="#cardList" data-icon="home" data-iconpos="left" data-transition="slide" data-direction="reverse"
+				class="ui-btn-left">Home
 			</a>
 			<h3>Question</h3>
 		</div>
 		<div data-role="content">
 			<div class="questionText"></div>
 			<div class="photoDisplayBox">
-				<a href="#imgPopup" data-rel="popup" data-position="window">
-					<img src="" id="imgQuestionDisplay" class="photoDisplay" />
-				</a>
+				<img src="" id="imgQuestionDisplay" class="photoDisplay" />
 			</div>
 			<ul data-role="listview" class="optionList" data-inset="true">
 			</ul>
@@ -154,36 +149,34 @@
 				<h4>Correct Answer: <span class="actualAnswer"></span></h4>
 			</div>
 		</div>
+
 		<div data-role="footer" data-position="fixed">
-			<h3></h3>
-			<a data-role="button" href="#cardList" data-icon="home" data-iconpos="left" data-transition="slide" data-direction="reverse"
-				class="ui-btn-left">Home
-			</a>
-			<a data-role="button" data-icon="refresh" data-iconpos="right" class="randomQuestionButton ui-btn-right" href="#question2" data-transition="flip">Random</a>
-		</div>
-		<div data-role="popup" id="imgPopup" class="photopopup">
-		<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" 
-			data-iconpos="notext" class="ui-btn-right">Close</a>
-			<img src="" id="imgFullScreen" class="fullScreenImage" />
+			<div class="navgroup">
+				<a id="btnQuestionPrev" data-role="button" data-icon="arrow-l" href="#question2" data-transition="slide" data-direction="reverse"
+					data-iconpos="left" class="ui-btn-left">Prev 
+				</a>
+				<div data-role="controlgroup" data-type="horizontal">
+					<a data-role="button" data-icon="refresh" data-iconpos="right" class="randomQuestionButton" href="#question2" data-transition="flip">Random</a>
+				</div>
+				<a id="btnQuestionNext" data-role="button" data-icon="arrow-r" href="#question2" data-transition="slide"
+					data-iconpos="right" class="ui-btn-right">Next 
+				</a>
+			</div>
 		</div>
 	</div>
 	<!--We'll create two question pages and switch back and forth between them to make the transitions smooth-->
 	<div data-role="page" id="question2" class="questionPage">
 		<div data-role="header">
-			<a id="btnQuestionPrev2" data-role="button" data-icon="arrow-l" href="#question" data-transition="slide" data-direction="reverse"
-				data-iconpos="left" class="prevQuestionButton ui-btn-left">Prev 
+			<a data-role="button" href="#cardList" data-icon="home" data-iconpos="left" data-transition="slide" data-direction="reverse"
+				class="ui-btn-left">Home
 			</a>
-			<a id="btnQuestionNext2" data-role="button" data-icon="arrow-r" href="#question" data-transition="slide"
-				data-iconpos="right" class="ui-btn-right">Next 
-			</a>
+
 			<h3>Question</h3>
 		</div>
 		<div data-role="content">
 			<div class="questionText"></div>
 			<div class="photoDisplayBox">
-				<a href="#imgPopup2" data-rel="popup" data-position="window">
-					<img src="" id="imgQuestionDisplay2" class="photoDisplay" />
-				</a>
+				<img src="" id="imgQuestionDisplay2" class="photoDisplay" />
 			</div>
 			<ul data-role="listview" class="optionList" data-inset="true">
 			</ul>
@@ -198,16 +191,17 @@
 			</div>
 		</div>
 		<div data-role="footer" data-position="fixed">
-			<h3></h3>
-			<a data-role="button" href="#cardList" data-icon="home" data-iconpos="left" data-transition="slide" data-direction="reverse"
-				class="ui-btn-left">Home
-			</a>
-			<a data-role="button" data-icon="refresh" data-iconpos="right" class="randomQuestionButton ui-btn-right" href="#question" data-transition="flip">Random</a>
-		</div>
-		<div data-role="popup" id="imgPopup2" class="photopopup">
-			<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" 
-			data-iconpos="notext" class="ui-btn-right">Close</a>
-			<img src="" id="imgFullScreen2" class="fullScreenImage" />
+			<div class="navgroup">
+				<a id="btnQuestionPrev2" data-role="button" data-icon="arrow-l" href="#question" data-transition="slide" data-direction="reverse"
+					data-iconpos="left" class="prevQuestionButton ui-btn-left">Prev 
+				</a>
+				<div data-role="controlgroup" data-type="horizontal">
+					<a data-role="button" data-icon="refresh" data-iconpos="right" class="randomQuestionButton" href="#question" data-transition="flip">Random</a>
+				</div>
+				<a id="btnQuestionNext2" data-role="button" data-icon="arrow-r" href="#question" data-transition="slide"
+					data-iconpos="right" class="ui-btn-right">Next 
+				</a>
+			</div>
 		</div>
 	</div>
 

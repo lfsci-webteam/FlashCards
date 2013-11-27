@@ -309,11 +309,9 @@ h1
 	min-height: 2.5em;
 }
 
-.photoDisplayBox
-{
-	text-align: center;
-	padding: 5px;
-}
+.navgroup {text-align:center;}
+.navgroup div {display:inline-block;}
+
 
 /*****************************************************************************************************************/
 /*							Device and Orientation-Specific Media Queries										 */
